@@ -206,3 +206,15 @@ def start_manager(tcp_port, udp_port):
         client_socket, client_address = server_socket.accept()
         threading.Thread(target=handle_client, args=(client_socket, client_address, udp_port), daemon=True).start()
 
+if __name__ == "__main__":
+    mode = input("Start as (Manager/Agent): ").strip().lower()
+    if mode == "manager":
+        tcp_port = 5000
+        udp_port = 5001
+        start_manager(tcp_port, udp_port)
+    elif mode == "agent":
+        manager_ip = input("Enter Manager IP: ").strip()
+        manager_port = 5000
+        agent_tcp_handler(manager_ip, manager_port)
+    else:
+        print("Invalid mode. Exiting.")
