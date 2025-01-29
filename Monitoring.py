@@ -105,3 +105,66 @@ def monitor_system(manager_ip, udp_port, agent_id):
         if cpu_usage > 80:
             event_message = f"Agent ID: {agent_id}, High CPU Usage Alert: {cpu_usage}%"
             udp_socket.sendto(event_message.encode(), (manager_ip, udp_port))
+
+# ==================== Manager Code ====================
+def handle_client(client_socket, client_address, udp_port):
+    """Handle communication with a connected agent."""
+    try:
+        if client_address[0] not in AUTHORIZED_AGENTS:
+            print(f"Unauthorized agent {client_address[0]} attempted to connect. Connection refused.")
+            client_socket.close()
+            return
+
+        agent_id = client_socket.recv(1024).decode()
+        AGENTS.append({"id": agent_id, "address": client_address, "socket": client_socket})
+        print(f"Authorized agent {agent_id} connected: {client_address}")
+
+        client_socket.send(str(udp_port).encode())
+
+        while True:
+            print("\nAvailable Agents:")
+            for i, agent in enumerate(AGENTS):
+                print(f"{i + 1}. ID: {agent['id']}, Address: {agent['address']}")
+
+            try:
+                selected_agent = int(input("Select a representative by number or turn off the program by entering the number 0: ")) - 1
+                if selected_agent == -1:
+                    print("Shutting Down :)")
+                    os._exit(0)
+                if 0 <= selected_agent < len(AGENTS):
+                    selected_id = AGENTS[selected_agent]['id']
+                    selected_socket = AGENTS[selected_agent]['socket']
+                    print(f"Selected Agent: {selected_id}")
+                    print("\nAvailable Commands:")
+                    print("1. Get_Status")
+                    print("2. Get_Process_Count")
+                    print("3. Get_File")
+                    print("4. Restart")
+                    command_number = input("Enter command number: ").strip()
+                    commands = {"1": "get_status", "2": "get_process_count", "3": "send_file", "4": "restart"}
+                    if command_number in commands:
+                        command = commands[command_number]
+                        selected_socket.send(command.encode())
+                        if command == "send_file":
+                            receive_file(selected_socket)
+                        else:
+                            response = selected_socket.recv(1024).decode()
+                            print(f"Agent Response: {response}")
+                    else:
+                        print("Invalid command number. Try again.")
+                else:
+                    print("Invalid selection. Try again.")
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
+    except Exception as e:
+        print(f"Client Handler Error: {e}")
+    finally:
+        disconnected_agent = next((agent for agent in AGENTS if agent['socket'] == client_socket), None)
+        if disconnected_agent:
+            print(f"Agent {disconnected_agent['id']} disconnected.")
+            AGENTS.remove(disconnected_agent)
+        client_socket.close()
+        print("\nUpdated Available Agents:")
+        for i, agent in enumerate(AGENTS):
+            print(f"{i + 1}. ID: {agent['id']}, Address: {agent['address']}")
+
