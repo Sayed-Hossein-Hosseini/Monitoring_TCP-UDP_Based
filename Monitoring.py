@@ -194,3 +194,15 @@ def receive_file(client_socket):
         client_socket.send("File received successfully.".encode())
     except Exception as e:
         print(f"Error receiving file: {e}")
+
+def start_manager(tcp_port, udp_port):
+    """Start the central manager."""
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(("", tcp_port))
+    server_socket.listen(5)
+    print(f"Manager listening on TCP port {tcp_port}...")
+    print(f"Manager listening on UDP port {udp_port}...")
+    while True:
+        client_socket, client_address = server_socket.accept()
+        threading.Thread(target=handle_client, args=(client_socket, client_address, udp_port), daemon=True).start()
+
