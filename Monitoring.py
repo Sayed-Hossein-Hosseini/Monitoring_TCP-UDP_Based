@@ -72,3 +72,28 @@ def agent_tcp_handler(manager_ip, manager_port):
             print(f"Connection lost: {e}. Attempting to reconnect...")
             tcp_socket.close()
 
+def send_file(tcp_socket, file_path):
+    """Send a file to the manager."""
+    try:
+        if not os.path.exists(file_path):
+            tcp_socket.send("ERROR: File not found.".encode())
+            return
+
+        file_name = os.path.basename(file_path)
+        file_size = os.path.getsize(file_path)
+        tcp_socket.send(f"FILE {file_name} {file_size}".encode())
+
+        ack = tcp_socket.recv(1024).decode()
+        if ack != "READY":
+            print("Manager not ready to receive file.")
+            return
+
+        with open(file_path, "rb") as f:
+            while chunk := f.read(1024):
+                tcp_socket.send(chunk)
+
+        print(f"File '{file_name}' sent successfully.")
+        tcp_socket.send("FILE_SENT".encode())
+    except Exception as e:
+        print(f"Error sending file: {e}")
+
