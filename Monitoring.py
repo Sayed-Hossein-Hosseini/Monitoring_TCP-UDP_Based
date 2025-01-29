@@ -168,3 +168,29 @@ def handle_client(client_socket, client_address, udp_port):
         for i, agent in enumerate(AGENTS):
             print(f"{i + 1}. ID: {agent['id']}, Address: {agent['address']}")
 
+def receive_file(client_socket):
+    """Receive a file from the agent."""
+    try:
+        metadata = client_socket.recv(1024).decode()
+        if not metadata.startswith("FILE"):
+            print("Invalid file metadata received.")
+            return
+
+        _, file_name, file_size = metadata.split()
+        file_size = int(file_size)
+
+        print(f"Receiving file: {file_name}")
+
+        client_socket.send("READY".encode())
+
+        with open(file_name, "wb") as f:
+            received = 0
+            while received < file_size:
+                data = client_socket.recv(1024)
+                f.write(data)
+                received += len(data)
+
+        print(f"File '{file_name}' received successfully.")
+        client_socket.send("File received successfully.".encode())
+    except Exception as e:
+        print(f"Error receiving file: {e}")
