@@ -97,3 +97,11 @@ def send_file(tcp_socket, file_path):
     except Exception as e:
         print(f"Error sending file: {e}")
 
+def monitor_system(manager_ip, udp_port, agent_id):
+    """Monitor system and send events to the manager via UDP."""
+    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    while True:
+        cpu_usage = psutil.cpu_percent(interval=1)
+        if cpu_usage > 80:
+            event_message = f"Agent ID: {agent_id}, High CPU Usage Alert: {cpu_usage}%"
+            udp_socket.sendto(event_message.encode(), (manager_ip, udp_port))
