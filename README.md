@@ -110,3 +110,10 @@ pip install psutil
 
 3. When prompted, select **Agent**.  
 4. Enter the IP address of the Manager (default is **127.0.0.1**).
+
+---
+
+## Configuration  
+
+- **Ports**: You can change the TCP and UDP ports in the code.  
+- **Authorized Agents List**: You can modify the list of authorized Agent IPs in the `AUTHORIZED_AGENTS` variable in the Manager code.
