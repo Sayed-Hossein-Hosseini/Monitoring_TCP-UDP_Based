@@ -117,3 +117,56 @@ pip install psutil
 
 - **Ports**: You can change the TCP and UDP ports in the code.  
 - **Authorized Agents List**: You can modify the list of authorized Agent IPs in the `AUTHORIZED_AGENTS` variable in the Manager code.
+
+---
+
+## Usage Examples  
+
+### 1. Monitoring CPU  
+
+- If CPU usage exceeds 80%, the Manager and Agent will print the following message:
+  
+  ```
+  High CPU Usage Alert: 85%
+  ```
+- If CPU usage returns to normal, the following message will be printed:
+  
+  ```
+  CPU Usage Back to Normal: 75%
+  ```
+
+### 2. Retrieving System Status  
+- The Manager can request the system status from the Agent. The Agent sends the following information:
+
+  ```
+  Memory Usage: 45%, CPU Usage: 30%, Disk Usage: 60%, Network: Sent: 10.5 MB, Received: 5.2 MB, Uptime: 02:30:45
+  ```
+
+### 3. Receiving a File from the Agent  
+- The Manager can request a file from the Agent. The Agent sends the file to the Manager.
+
+---
+
+## Contribution  
+
+If you would like to contribute to the development of this project, follow these steps:  
+
+1. Fork the project.  
+2. Create a new branch (`git checkout -b feature/YourFeatureName`).  
+3. Commit your changes (`git commit -m 'Add some feature'`).  
+4. Push your changes to your branch (`git push origin feature/YourFeatureName`).  
+5. Create a Pull Request.
+
+---
+
+## License  
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+---
+
+> **Note:** This project is designed for educational and experimental purposes. Using it in production environments requires thorough testing and evaluation.
+
+---
+
+### Project Author : Sayyed Hossein Hosseini Dolat Abadi ###
