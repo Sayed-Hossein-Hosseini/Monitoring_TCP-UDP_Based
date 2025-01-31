@@ -85,6 +85,7 @@ To install the required libraries, run the following command:
 
 ```bash
 pip install psutil
+```
 
 ### Running the Manager  
 
