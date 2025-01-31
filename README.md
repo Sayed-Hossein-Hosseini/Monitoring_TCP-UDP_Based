@@ -85,3 +85,27 @@ To install the required libraries, run the following command:
 
 ```bash
 pip install psutil
+
+### Running the Manager  
+
+1. Download the project files.  
+2. Run the following command:  
+
+    ```bash  
+    python main.py  
+    ```  
+
+3. When prompted, select **Manager**.  
+4. The Manager listens on TCP port **5005** and UDP port **5006** by default.  
+
+### Running the Agent  
+
+1. Copy the project files to the Agent's system.  
+2. Run the following command:  
+
+    ```bash  
+    python main.py  
+    ```  
+
+3. When prompted, select **Agent**.  
+4. Enter the IP address of the Manager (default is **127.0.0.1**).
