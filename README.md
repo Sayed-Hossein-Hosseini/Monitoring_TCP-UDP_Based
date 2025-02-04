@@ -169,4 +169,5 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 
 ---
 
-### Project Author : Sayyed Hossein Hosseini Dolat Abadi ###
+## Author
+Sayyed Hossein Hosseini Dolat Abadi 
